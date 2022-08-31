@@ -67,15 +67,29 @@ public class DebtServiceImpl implements DebtService {
             throw new Exception("Debt has already been paid.");
         }
 
+        if (amount.doubleValue() > debt.getTotalAmount().doubleValue() ||
+                amount.doubleValue() > balance.doubleValue()) {
+            throw new Exception("Amount to be paid cannot exceed the total balance.");
+        }
+
         if (TRUE.equals(request.getTotalPaid())) {
             if (!balance.equals(amount)) {
-                throw new Exception("Amount to be paid must be equal to the balance of the debt.");
+                throw new Exception("Amount to be paid must be equal to the balance.");
             }
             debt.setQuoteNumber(debt.getTerm());
             debt.setStatus(Debt.PAID);
+        } else {
+            if (request.getQuoteNumber() > debt.getTerm()) {
+                throw new Exception("QuoteNumber invalid.");
+            }
         }
 
-        debt.setQuoteNumber(request.getQuoteNumber());
+        double quoteValue = debt.getTotalAmount().doubleValue() / debt.getTerm();
+
+        if (amount.doubleValue() >= quoteValue) {
+            debt.setQuoteNumber(request.getQuoteNumber());
+        }
+
         debt.setBalance(balance.subtract(amount));
         debtRepository.saveAndFlush(debt);
         return buildCompleteDebtResponse(debt, user.getDocumentNumber());

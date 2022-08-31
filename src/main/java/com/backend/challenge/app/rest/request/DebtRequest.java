@@ -2,6 +2,8 @@ package com.backend.challenge.app.rest.request;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Positive;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,9 +14,11 @@ public class DebtRequest {
     private String documentNumber;
 
     @JsonProperty
+    @Positive(message = "amount must be greater than zero")
     private BigDecimal amount;
 
     @JsonProperty
+    @Positive(message = "quoteNumber must be greater than zero")
     private Integer quoteNumber;
 
     @JsonProperty

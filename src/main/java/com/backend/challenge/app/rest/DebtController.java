@@ -2,6 +2,8 @@ package com.backend.challenge.app.rest;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +47,7 @@ public class DebtController {
     @PutMapping(path = "/{debtId}", produces = { MediaType.APPLICATION_JSON_VALUE },
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DebtResponse> paidDebt(@PathVariable("debtId") Long debtId,
-                                                 @RequestBody DebtRequest request)
+                                                 @RequestBody @Valid DebtRequest request)
             throws Exception {
         return new ResponseEntity<>(debtService.paidDebt(debtId, request), HttpStatus.OK);
     }
